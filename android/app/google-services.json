@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "807162605566",
+    "project_id": "hydrolink-testing",
+    "storage_bucket": "hydrolink-testing.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:807162605566:android:fd6b2db69d8e5e6b445aaf",
+        "android_client_info": {
+          "package_name": "com.example.hydrolink_testing"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLcouecDW-MWDGEUW-KFUSvRJhOirKFuw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
