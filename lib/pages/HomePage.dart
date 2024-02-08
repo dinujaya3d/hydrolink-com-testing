@@ -1,8 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-//import 'package:hydrolink_testing/components/percentage.dart';
-//import 'package:hydrolink_testing/components/percentage2.dart';
-//import 'package:hydrolink_testing/components/waterflow.dart';
+import 'package:hydrolink_testing/pages/NewDevicePage.dart';
 import 'package:hydrolink_testing/pages/dashboard.dart';
 import 'package:hydrolink_testing/pages/settings.dart';
 
@@ -15,6 +14,35 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 1;
+  late User userFire; // Declare userFire with late keyword
+  late List<Widget> _pages; // Declare _pages with late keyword
+
+  @override
+  void initState() {
+    super.initState();
+    userFire =
+        FirebaseAuth.instance.currentUser!; // Initialize userFire in initState
+
+    String nameUser = userFire.displayName!; // Initialize _pages in initState
+    print(nameUser);
+    //FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+    //String name = userFire.getDisplayName();
+    _pages = [
+      SettingsPage(),
+      Dashboard(userUid: userFire != null ? userFire.uid : 'No UID'),
+      // const Center(
+      //   child: Text(
+      //     "Support",
+      //     style: TextStyle(
+      //       fontSize: 30,
+      //       fontWeight: FontWeight.bold,
+      //     ),
+      //   ),
+      // ),
+      NewDevicePage(),
+    ];
+  }
 
   void _navigateBottomBar(int index) {
     setState(() {
@@ -22,19 +50,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  final List<Widget> _pages = [
-    SettingsPage(),
-    Dashboard(),
-    const Center(
-      child: Text(
-        "Support",
-        style: TextStyle(
-          fontSize: 30,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    ),
-  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 
 ThemeData lightMode = ThemeData(
-  brightness: Brightness.light,
-  colorScheme: ColorScheme.light(
-      primary: Colors.grey.shade100,
-      secondary: Colors.grey.shade400,
-      background: Color(0xFF000066),
-      onBackground: Colors.grey.shade400,
-      onPrimaryContainer: Colors.grey.shade400,
-      outline: Colors.grey.shade900,
-      onPrimary: Colors.black, //Main Text Color
-      onSecondary: Colors.grey.shade800, // Secondary Text Color
-      tertiary: Color(0xFF4B7BF5),
-      onTertiary: Colors.grey.shade500,
-      onSurface: Colors.grey.shade200,
-      onSurfaceVariant: Colors.grey.shade600),
-);
+    brightness: Brightness.light,
+    colorScheme: ColorScheme.light(
+        primary: Colors.grey.shade100,
+        secondary: Colors.grey.shade400,
+        background: Color(0xFF000066),
+        onBackground: Colors.grey.shade400,
+        onPrimaryContainer: Colors.grey.shade400,
+        outline: Colors.grey.shade900,
+        onPrimary: Colors.black, //Main Text Color
+        onSecondary: Colors.grey.shade800, // Secondary Text Color
+        tertiary: Color(0xFF4B7BF5),
+        onTertiary: Colors.grey.shade500,
+        onSurface: Colors.grey.shade200,
+        onSurfaceVariant: Colors.grey.shade600,
+        onInverseSurface: Colors.grey.shade300, //button shadow 1
+        onError: Colors.grey.shade400, //button shadow 1
+        onErrorContainer: Colors.grey.shade900 //button icon color
+        ));
 
 ThemeData darkMode = ThemeData(
     brightness: Brightness.dark,
@@ -31,4 +34,8 @@ ThemeData darkMode = ThemeData(
         tertiary: Color(0xFF79A9F5),
         onTertiary: Color.fromARGB(255, 53, 29, 65),
         onSurface: Color.fromARGB(217, 38, 35, 113),
-        onSurfaceVariant: Color.fromARGB(255, 53, 29, 65)));
+        onSurfaceVariant: Color.fromARGB(255, 53, 29, 65),
+        onInverseSurface: Colors.grey.shade300, //button shadow 1
+        onError: Colors.grey.shade400, //button shadow 1
+        onErrorContainer: Colors.grey.shade700 //button icon color
+        ));

@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hydrolink_testing/pages/NewDevicePage.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -7,12 +8,17 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  late User userFire; // Declare userFire with late keyword
+  String nameUser = '';
+
   void signUserOut() {
     FirebaseAuth.instance.signOut();
   }
 
   @override
   Widget build(BuildContext context) {
+    userFire = FirebaseAuth.instance.currentUser!;
+    nameUser = userFire.displayName!;
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primary,
       body: Container(
@@ -46,7 +52,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     SizedBox(height: 16),
                     // User Name
                     Text(
-                      'John Doe',
+                      nameUser,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -88,6 +94,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 title: Text('Connect a New Device'),
                 onTap: () {
                   // TODO: Implement connect new device functionality
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => NewDevicePage()));
                 },
               ),
               // Check for Connectivity
