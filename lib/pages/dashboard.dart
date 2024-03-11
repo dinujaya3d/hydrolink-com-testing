@@ -2,6 +2,7 @@ import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:hydrolink_testing/components/percentage.dart';
 import 'package:hydrolink_testing/components/percentage2.dart';
 import 'package:hydrolink_testing/components/waterflow.dart';
@@ -22,6 +23,7 @@ class _DashboardState extends State<Dashboard> {
   String _selectedControlType = 'Manual';
   double _percentageValue = 0.0;
   bool _switchValue = false;
+  //bool _auto = false;
 
   Query dbRef2 = FirebaseDatabase.instance.ref();
   DatabaseReference reference =
@@ -38,6 +40,16 @@ class _DashboardState extends State<Dashboard> {
     reference.child(user).update(tanks).then((value) => null);
     setState(() {
       _switchValue = value;
+    });
+  }
+
+  void ctrlTypeChanged(String? value) {
+    Map<String, bool> tanks = {
+      'Auto': value == 'Manual' ? false : true,
+    };
+    reference.child(user).update(tanks).then((value) => null);
+    setState(() {
+      _selectedControlType = value!;
     });
   }
 
@@ -229,9 +241,7 @@ class _DashboardState extends State<Dashboard> {
                         DropdownButton(
                           value: _selectedControlType,
                           onChanged: (String? newValue) {
-                            setState(() {
-                              _selectedControlType = newValue!;
-                            });
+                            ctrlTypeChanged(newValue!);
                           },
                           dropdownColor:
                               Theme.of(context).colorScheme.onPrimaryContainer,
