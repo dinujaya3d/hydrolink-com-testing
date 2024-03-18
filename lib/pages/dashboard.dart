@@ -8,6 +8,8 @@ import 'package:hydrolink_testing/components/percentage2.dart';
 import 'package:hydrolink_testing/components/waterflow.dart';
 import 'package:hydrolink_testing/pages/AddDevicePage.dart';
 import 'package:hydrolink_testing/pages/NewDevicePage.dart';
+import 'package:hydrolink_testing/pages/usage_page.dart';
+import 'package:hydrolink_testing/pages/usage_page.dart';
 
 class Dashboard extends StatefulWidget {
   final String userUid;
@@ -18,7 +20,7 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  String user = 'HYD00001';
+  String user = 'HYD00005';
 
   String _selectedControlType = 'Manual';
   double _percentageValue = 0.0;
@@ -82,6 +84,15 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget Dash({required Map tank, required String userUID}) {
+    if (tank['Users'][userUID] != null) {
+      //_switchValue = true;
+    } else {
+      addUserInRealTimeDB(userUID);
+    }
+    ;
+    if (tank['Users'][userUID]['Selected Tank'] != 'None') {
+      user = tank['Users'][userUID]['Selected Tank'];
+    }
     print('man Switch' + tank['Tanks'][user]['ManSwitch'].toString());
     print('Water' + tank['Tanks'][user]['Water'].toString());
     print("UserUID: " + userUID);
@@ -89,12 +100,6 @@ class _DashboardState extends State<Dashboard> {
     print("User Data: " + tank['Users'][userUID].toString());
     print('Parameters' + tank['Parameters']['Tanks'].keys.toList().toString());
 
-    if (tank['Users'][userUID] != null) {
-      //_switchValue = true;
-    } else {
-      addUserInRealTimeDB(userUID);
-    }
-    ;
     return tank['Users'][userUID]['Selected Tank'] == 'None'
         ? Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -207,71 +212,129 @@ class _DashboardState extends State<Dashboard> {
                   ),
                 ],
               ),
-              Padding(
-                padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.04,
-                    bottom: MediaQuery.of(context).size.height * 0.04),
-                child: Center(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Theme.of(context).colorScheme.outline,
-                        width: 1,
-                      ),
-                      borderRadius: BorderRadius.circular(10),
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
-                    ),
-                    width: MediaQuery.of(context).size.width * 0.8,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(
-                            left: 10,
-                            right: MediaQuery.of(context).size.width * 0.41,
-                            top: 10,
+              Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.04,
+                        bottom: MediaQuery.of(context).size.height * 0.04,
+                        left: MediaQuery.of(context).size.width * 0.05,
+                        right: MediaQuery.of(context).size.width * 0.05),
+                    child: Center(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Theme.of(context).colorScheme.outline,
+                            width: 1,
                           ),
-                          child: Text("Control Type",
-                              style: TextStyle(
-                                color:
-                                    Theme.of(context).colorScheme.onSecondary,
-                                fontSize: 15,
-                              )),
-                        ),
-                        DropdownButton(
-                          value: _selectedControlType,
-                          onChanged: (String? newValue) {
-                            ctrlTypeChanged(newValue!);
-                          },
-                          dropdownColor:
+                          borderRadius: BorderRadius.circular(10),
+                          color:
                               Theme.of(context).colorScheme.onPrimaryContainer,
-                          underline: Container(),
-                          items: <String>['Manual', 'Auto']
-                              .map<DropdownMenuItem<String>>(
-                            (String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Padding(
+                        ),
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        child: Row(
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Padding(
                                   padding: EdgeInsets.only(
-                                      left: 10,
-                                      right: MediaQuery.of(context).size.width *
-                                          0.4),
-                                  child: Text(value,
+                                    left: 10,
+                                    right: MediaQuery.of(context).size.width *
+                                        0.41,
+                                    top: 10,
+                                  ),
+                                  child: Text("Control Type",
                                       style: TextStyle(
                                         color: Theme.of(context)
                                             .colorScheme
-                                            .onPrimary,
-                                        fontSize: 20,
+                                            .onSecondary,
+                                        fontSize: 15,
                                       )),
                                 ),
-                              );
-                            },
-                          ).toList(),
+                                Row(
+                                  children: [
+                                    DropdownButton(
+                                      value: _selectedControlType,
+                                      onChanged: (String? newValue) {
+                                        ctrlTypeChanged(newValue!);
+                                      },
+                                      dropdownColor: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimaryContainer,
+                                      underline: Container(),
+                                      items: <String>['Manual', 'Auto']
+                                          .map<DropdownMenuItem<String>>(
+                                        (String value) {
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Padding(
+                                              padding: EdgeInsets.only(
+                                                  left: 10,
+                                                  right: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.4),
+                                              child: Text(value,
+                                                  style: TextStyle(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .onPrimary,
+                                                    fontSize: 20,
+                                                  )),
+                                            ),
+                                          );
+                                        },
+                                      ).toList(),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => UsagePage(
+                                  tankName: user,
+                                )),
+                      );
+                    },
+                    child: Container(
+                        padding: EdgeInsets.symmetric(
+                            vertical: MediaQuery.of(context).size.width * 0.025,
+                            horizontal:
+                                MediaQuery.of(context).size.width * 0.025),
+                        decoration: BoxDecoration(
+                          color:
+                              Theme.of(context).colorScheme.onPrimaryContainer,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: Theme.of(context).colorScheme.outline,
+                            width: 1,
+                          ),
+                        ),
+                        child: Column(
+                          children: [
+                            Icon(
+                              Icons.trending_up,
+                              size: 40,
+                            ),
+                            Text(
+                              "Usage",
+                              style: TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.bold),
+                            )
+                          ],
+                        )),
+                  )
+                ],
               )
             ],
           );

@@ -22,8 +22,12 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     userFire =
         FirebaseAuth.instance.currentUser!; // Initialize userFire in initState
-
-    String nameUser = userFire.displayName!; // Initialize _pages in initState
+    String nameUser = "Unknown User";
+    try {
+      String nameUser = userFire.displayName!; // Initialize _pages in initState
+    } catch (e) {
+      String nameUser = userFire.email!; // Initialize _pages in initState
+    }
     print(nameUser);
     //FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
