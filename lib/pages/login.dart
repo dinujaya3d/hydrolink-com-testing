@@ -6,7 +6,8 @@ import 'signup.dart'; // Import the SignupPage
 
 class LoginPage extends StatefulWidget {
   final Function()? onTap;
-  LoginPage({super.key, required this.onTap});
+  final String token;
+  LoginPage({super.key, required this.onTap, required this.token});
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
@@ -268,7 +269,9 @@ class _LoginPageState extends State<LoginPage> {
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => PhoneNumPage(),
+                                builder: (context) => PhoneNumPage(
+                                  token: widget.token,
+                                ),
                               ),
                             );
                           },

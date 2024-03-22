@@ -1,4 +1,5 @@
 import 'package:firebase_database/ui/firebase_animated_list.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -13,7 +14,8 @@ import 'package:hydrolink_testing/pages/usage_page.dart';
 
 class Dashboard extends StatefulWidget {
   final String userUid;
-  Dashboard({super.key, required this.userUid});
+  final String token;
+  Dashboard({super.key, required this.userUid, required this.token});
 
   @override
   State<Dashboard> createState() => _DashboardState();
@@ -32,6 +34,8 @@ class _DashboardState extends State<Dashboard> {
       FirebaseDatabase.instance.ref().child('RealTimeDB/Tanks');
   DatabaseReference reference2 =
       FirebaseDatabase.instance.ref().child('RealTimeDB/Users');
+  DatabaseReference reference3 =
+      FirebaseDatabase.instance.ref().child('RealTimeDB/Notifications');
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -43,6 +47,20 @@ class _DashboardState extends State<Dashboard> {
     setState(() {
       _switchValue = value;
     });
+  }
+
+  void updateMessageId(String messageId, String allUsers) {
+    List users = allUsers.split(',');
+    if (users.contains(messageId)) {
+      //
+    } else if (messageId != 'No token') {
+      users.add(messageId);
+      String updateText = users.join(',');
+      Map<String, String> messageIdMap = {
+        'users': updateText,
+      };
+      reference3.child(user).update(messageIdMap).then((value) => null);
+    }
   }
 
   void ctrlTypeChanged(String? value) {
@@ -83,7 +101,8 @@ class _DashboardState extends State<Dashboard> {
     reference2.child(userUID).update(newUserTank).then((value) => null);
   }
 
-  Widget Dash({required Map tank, required String userUID}) {
+  Widget Dash(
+      {required Map tank, required String userUID, required String token}) {
     if (tank['Users'][userUID] != null) {
       //_switchValue = true;
     } else {
@@ -92,13 +111,19 @@ class _DashboardState extends State<Dashboard> {
     ;
     if (tank['Users'][userUID]['Selected Tank'] != 'None') {
       user = tank['Users'][userUID]['Selected Tank'];
+      updateMessageId(token, tank['Notifications'][user]['users']);
     }
-    print('man Switch' + tank['Tanks'][user]['ManSwitch'].toString());
-    print('Water' + tank['Tanks'][user]['Water'].toString());
-    print("UserUID: " + userUID);
-    print("User Name : " + userUID);
-    print("User Data: " + tank['Users'][userUID].toString());
-    print('Parameters' + tank['Parameters']['Tanks'].keys.toList().toString());
+    // print('man Switch' + tank['Tanks'][user]['ManSwitch'].toString());
+    // print('Water' + tank['Tanks'][user]['Water'].toString());
+    // print("UserUID: " + userUID);
+    // print("User Name : " + userUID);
+    // print("User Data: " + tank['Users'][userUID].toString());
+    // print('Parameters' + tank['Parameters']['Tanks'].keys.toList().toString());
+    // print("token dash 2" + widget.token);
+    // print("Width");
+    // print(MediaQuery.of(context).size.width);
+    // print("Height");
+    // print(MediaQuery.of(context).size.height);
 
     return tank['Users'][userUID]['Selected Tank'] == 'None'
         ? Column(
@@ -185,11 +210,12 @@ class _DashboardState extends State<Dashboard> {
                         width: MediaQuery.of(context).size.width * 0.5,
                         child: WaterflowIndicator(),
                       ),
-                      const Text(
+                      Text(
                         "Water Flow",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20,
+                          color: Theme.of(context).colorScheme.onPrimary,
                         ),
                       ),
                     ],
@@ -201,11 +227,12 @@ class _DashboardState extends State<Dashboard> {
                         width: MediaQuery.of(context).size.width * 0.5,
                         child: PercentageSmall(),
                       ),
-                      const Text(
+                      Text(
                         "Battery",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20,
+                          color: Theme.of(context).colorScheme.onPrimary,
                         ),
                       ),
                     ],
@@ -329,7 +356,10 @@ class _DashboardState extends State<Dashboard> {
                             Text(
                               "Usage",
                               style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.bold),
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color:
+                                      Theme.of(context).colorScheme.onPrimary),
                             )
                           ],
                         )),
@@ -342,6 +372,7 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
+    print("Token dash 1: " + widget.token);
     return Scaffold(
       //key: _scaffoldKey,
       extendBody: true,
@@ -373,7 +404,8 @@ class _DashboardState extends State<Dashboard> {
                   //    student[user][switchParams[index]];
                   tank['key'] = snapshot.key;
 
-                  return Dash(tank: tank, userUID: widget.userUid);
+                  return Dash(
+                      tank: tank, userUID: widget.userUid, token: widget.token);
                 },
               ),
             ),

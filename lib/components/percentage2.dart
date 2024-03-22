@@ -34,6 +34,7 @@ class _PercentageSmallState extends State<PercentageSmall> {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
+                  color: Theme.of(context).colorScheme.onPrimary,
                 ),
               ),
             ],

@@ -6,6 +6,8 @@ import 'package:hydrolink_testing/pages/login_or_register_page.dart';
 import 'package:hydrolink_testing/pages/otp_verify.dart';
 
 class PhoneNumPage extends StatefulWidget {
+  final String token;
+  PhoneNumPage({super.key, required this.token});
   @override
   _PhoneNumPageState createState() => _PhoneNumPageState();
 }
@@ -40,7 +42,10 @@ class _PhoneNumPageState extends State<PhoneNumPage> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => OtpVerifyPage(verificationID: verificationId),
+            builder: (context) => OtpVerifyPage(
+              verificationID: verificationId,
+              token: widget.token,
+            ),
           ),
         );
       };
@@ -152,7 +157,8 @@ class _PhoneNumPageState extends State<PhoneNumPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => LoginOrRegisterPage()),
+                      builder: (context) =>
+                          LoginOrRegisterPage(token: widget.token)),
                 );
               },
               child: Text(

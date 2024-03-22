@@ -84,6 +84,7 @@ class _NewDevicePageState extends State<NewDevicePage> {
             'NickName': '',
             'Battery': 0,
             'Water': 0,
+            'ManSwitch': false,
           };
           tanksReference.child(_userTank).update(updater);
         }
@@ -248,6 +249,7 @@ class _NewDevicePageState extends State<NewDevicePage> {
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.onPrimary,
                               ),
                             ),
                             SizedBox(height: 8),
@@ -278,7 +280,9 @@ class _NewDevicePageState extends State<NewDevicePage> {
               // Change Account Information
               ListTile(
                 leading: Icon(Icons.water_drop),
-                title: Text('Tank Type'),
+                title: Text('Tank Type',
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimary)),
                 onTap: () {
                   // TODO: Implement change account information functionality
                   //signUserOut();
@@ -295,7 +299,9 @@ class _NewDevicePageState extends State<NewDevicePage> {
               // Connect a New Device
               ListTile(
                 leading: Icon(Icons.devices),
-                title: Text('Standard or Custom'),
+                title: Text('Standard or Custom',
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimary)),
                 onTap: () {
                   // TODO: Implement connect new device functionality
                 },
@@ -400,7 +406,9 @@ class _NewDevicePageState extends State<NewDevicePage> {
               // Check for Connectivity
               ListTile(
                 leading: Icon(Icons.wifi),
-                title: Text('Connect Device'),
+                title: Text('Connect Device',
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimary)),
                 onTap: () {
                   // TODO: Implement connectivity check functionality
                 },
@@ -455,7 +463,9 @@ class _NewDevicePageState extends State<NewDevicePage> {
               // Set Water Levels
               ListTile(
                 leading: Icon(Icons.opacity),
-                title: Text('Set Water Levels'),
+                title: Text('Set Water Levels',
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimary)),
                 onTap: () {
                   // TODO: Implement set water levels functionality
                 },
@@ -503,7 +513,9 @@ class _NewDevicePageState extends State<NewDevicePage> {
               // Change Language
               ListTile(
                 leading: Icon(Icons.language),
-                title: Text('Set Nickname'),
+                title: Text('Set Nickname',
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimary)),
                 onTap: () {
                   // TODO: Implement change language functionality
                 },
@@ -660,7 +672,10 @@ class _NewDevicePageState extends State<NewDevicePage> {
             ),
           ),
           child: SizedBox(
-            height: MediaQuery.of(context).size.height * 1.3,
+            height: MediaQuery.of(context).size.height >=
+                    2 * MediaQuery.of(context).size.width
+                ? MediaQuery.of(context).size.height * 1.3
+                : MediaQuery.of(context).size.height * 1.8,
             child: FirebaseAnimatedList(
               physics: const NeverScrollableScrollPhysics(),
               query: dbRef2,

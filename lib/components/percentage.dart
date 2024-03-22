@@ -30,7 +30,11 @@ class _PercentageState extends State<Percentage> {
     return CircularPercentIndicator(
       radius: MediaQuery.of(context).size.width * 0.35,
       lineWidth: 0.055 * MediaQuery.of(context).size.width,
-      percent: percentage >= 1 ? 0.99999 : percentage,
+      percent: percentage >= 1
+          ? 0.99999
+          : percentage <= 0
+              ? 0.99999
+              : percentage,
       progressColor: Theme.of(context).colorScheme.background,
       backgroundColor: Theme.of(context).colorScheme.onBackground,
       circularStrokeCap: CircularStrokeCap.round,
@@ -46,6 +50,7 @@ class _PercentageState extends State<Percentage> {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 40,
+                  color: Theme.of(context).colorScheme.onPrimary,
                 ),
               ),
               Row(
@@ -55,6 +60,7 @@ class _PercentageState extends State<Percentage> {
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
+                      color: Theme.of(context).colorScheme.onPrimary,
                     ),
                   ),
                 ],

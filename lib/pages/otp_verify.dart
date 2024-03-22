@@ -8,8 +8,12 @@ import 'package:hydrolink_testing/services/auth_service.dart';
 
 class OtpVerifyPage extends StatefulWidget {
   final String verificationID; // Add this line
+  final String token;
 
-  OtpVerifyPage({super.key, required this.verificationID}); // Add this line
+  OtpVerifyPage(
+      {super.key,
+      required this.verificationID,
+      required this.token}); // Add this line
   @override
   _OtpVerifyPageState createState() => _OtpVerifyPageState();
 }
@@ -93,8 +97,12 @@ class _OtpVerifyPageState extends State<OtpVerifyPage> {
                   //String verificationId = '';
                   //_verifyPhoneNumber(verificationId, otp);
                   AuthService().signINwithPhone(widget.verificationID, otp);
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => HomePage()));
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => HomePage(
+                                token: widget.token,
+                              )));
                 } catch (e) {
                   print(e.toString());
                 }
@@ -108,7 +116,8 @@ class _OtpVerifyPageState extends State<OtpVerifyPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => LoginOrRegisterPage()),
+                      builder: (context) =>
+                          LoginOrRegisterPage(token: widget.token)),
                 );
               },
               child: Text(

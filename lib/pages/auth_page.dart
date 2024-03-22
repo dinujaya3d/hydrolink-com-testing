@@ -6,7 +6,8 @@ import 'package:hydrolink_testing/pages/login.dart';
 import 'package:hydrolink_testing/pages/login_or_register_page.dart';
 
 class AuthPage extends StatelessWidget {
-  const AuthPage({super.key});
+  String token;
+  AuthPage({super.key, required this.token});
 
   @override
   Widget build(BuildContext context) {
@@ -15,9 +16,11 @@ class AuthPage extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: ((context, snapshot) {
           if (snapshot.hasData) {
-            return HomePage();
+            return HomePage(token: token);
           } else {
-            return LoginOrRegisterPage();
+            return LoginOrRegisterPage(
+              token: token,
+            );
           }
         }),
       ),

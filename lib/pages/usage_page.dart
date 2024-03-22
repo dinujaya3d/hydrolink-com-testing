@@ -4,6 +4,8 @@ import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:fl_chart/fl_chart.dart';
 //import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:hydrolink_testing/components/custom_tab_bar.dart';
+import 'package:hydrolink_testing/components/graph_generator.dart';
 
 class UsagePage extends StatefulWidget {
   final String tankName;
@@ -13,75 +15,193 @@ class UsagePage extends StatefulWidget {
   State<UsagePage> createState() => _UsagePageState();
 }
 
-Widget UsageCharts({required Map tank, required String user}) {
+Widget UsageCharts(
+    {required Map tank,
+    required String user,
+    required TabController flowRateTimeController,
+    required TabController usageController,
+    required BuildContext context}) {
+  //print(tank['Tanks'][user]['FlowRate']['Day'].keys.toList());
+
+  print("hello");
   return Column(
     children: [
       Container(
-        child: Column(
-          children: [
-            LineChart(LineChartData(lineBarsData: [
-              LineChartBarData(
-                  spots: [
-                    FlSpot(0, 1),
-                    FlSpot(1, 3),
-                    FlSpot(2, 2),
-                    FlSpot(3, 5),
-                    FlSpot(4, 4),
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+              vertical: MediaQuery.of(context).size.width * 0.02),
+          child: Column(
+            children: [
+              Text(
+                "Usage (L)",
+                style: TextStyle(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
+              ),
+              Container(
+                child: TabBar(
+                  controller: flowRateTimeController,
+                  tabs: [
+                    Tab(
+                      text: "Year",
+                    ),
+                    Tab(
+                      text: "Month",
+                    ),
+                    Tab(
+                      text: "Day",
+                    ),
+                    Tab(
+                      text: "Hour",
+                    )
                   ],
-                  isCurved: true,
-                  color: Colors.blue,
-                  barWidth: 4,
-                  isStrokeCapRound: true,
-                  belowBarData: BarAreaData(
-                      show: true, color: Colors.blue.withOpacity(0.3)))
-            ])),
-            Text(
-              user,
-            ),
-          ],
+                ),
+              ),
+              Container(
+                width: double.maxFinite,
+                height: MediaQuery.of(context).size.height * 0.3,
+                child:
+                    TabBarView(controller: flowRateTimeController, children: [
+                  MyGraph(
+                    graphMap: tank['Tanks'][user]['FlowRate']['Year'],
+                  ),
+                  MyGraph(
+                    graphMap: tank['Tanks'][user]['FlowRate']['Month'],
+                  ),
+                  MyGraph(
+                    graphMap: tank['Tanks'][user]['FlowRate']['Day'],
+                  ),
+                  MyGraph(
+                    graphMap: tank['Tanks'][user]['FlowRate']['Hour'],
+                  ),
+                ]),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.02,
+              ),
+              Text(
+                "Flow Rate (L/min)",
+                style: TextStyle(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
+              ),
+              Container(
+                child: TabBar(
+                  controller: usageController,
+                  tabs: [
+                    Tab(
+                      text: "Year",
+                    ),
+                    Tab(
+                      text: "Month",
+                    ),
+                    Tab(
+                      text: "Day",
+                    ),
+                    Tab(
+                      text: "Hour",
+                    )
+                  ],
+                ),
+              ),
+              Container(
+                width: double.maxFinite,
+                height: MediaQuery.of(context).size.height * 0.3,
+                child: TabBarView(controller: usageController, children: [
+                  MyGraph(
+                    graphMap: tank['Tanks'][user]['Usage']['Year'],
+                  ),
+                  MyGraph(
+                    graphMap: tank['Tanks'][user]['Usage']['Month'],
+                  ),
+                  MyGraph(
+                    graphMap: tank['Tanks'][user]['Usage']['Day'],
+                  ),
+                  MyGraph(
+                    graphMap: tank['Tanks'][user]['Usage']['Hour'],
+                  ),
+                ]),
+              ),
+            ],
+          ),
         ),
       ),
-      Text("Usage"),
     ],
   );
 }
 
-class _UsagePageState extends State<UsagePage> {
+class _UsagePageState extends State<UsagePage> with TickerProviderStateMixin {
   Query dbRef2 = FirebaseDatabase.instance.ref();
   DatabaseReference reference =
       FirebaseDatabase.instance.ref().child('RealTimeDB/Tanks');
   DatabaseReference reference2 =
       FirebaseDatabase.instance.ref().child('RealTimeDB/Users');
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  late TabController _flowRateTime;
+  late TabController _usageTime;
+
+  @override
+  void initState() {
+    super.initState();
+    _flowRateTime = TabController(
+      length: 4,
+      vsync: this,
+    );
+    _usageTime = TabController(
+      length: 4, // Adjust the length according to your needs
+      vsync: this,
+    );
+  }
+
+  @override
+  void dispose() {
+    _flowRateTime.dispose();
+    _usageTime.dispose(); // Dispose _usageTime as well
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(color: Color.fromARGB(255, 189, 202, 224)),
-        child: Column(
-          children: [
-            //Text("Logged In: " + userFire.uid!),
-
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.8795,
-              child: FirebaseAnimatedList(
-                physics: const NeverScrollableScrollPhysics(),
-                query: dbRef2,
-                itemBuilder: (BuildContext context, DataSnapshot snapshot,
-                    Animation<double> animation, int index) {
-                  Map tank = snapshot.value as Map;
-                  //mySmartDevices[index][2] =
-                  //    student[user][switchParams[index]];
-                  tank['key'] = snapshot.key;
-
-                  return UsageCharts(tank: tank, user: widget.tankName);
-                },
-              ),
+      body: SingleChildScrollView(
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Theme.of(context).colorScheme.primary,
+                Theme.of(context).colorScheme.secondary,
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
             ),
-          ],
+          ),
+          child: Column(
+            children: [
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 1,
+                child: FirebaseAnimatedList(
+                  physics: const NeverScrollableScrollPhysics(),
+                  query: dbRef2,
+                  itemBuilder: (BuildContext context, DataSnapshot snapshot,
+                      Animation<double> animation, int index) {
+                    Map tank = snapshot.value as Map;
+                    tank['key'] = snapshot.key;
+
+                    return UsageCharts(
+                      tank: tank,
+                      user: widget.tankName,
+                      flowRateTimeController: _flowRateTime,
+                      usageController: _usageTime,
+                      context: context,
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

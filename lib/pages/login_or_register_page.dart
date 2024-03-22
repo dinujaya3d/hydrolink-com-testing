@@ -4,7 +4,8 @@ import 'package:hydrolink_testing/pages/login.dart';
 import 'package:hydrolink_testing/pages/signup.dart';
 
 class LoginOrRegisterPage extends StatefulWidget {
-  const LoginOrRegisterPage({super.key});
+  final String token;
+  const LoginOrRegisterPage({super.key, required this.token});
 
   @override
   State<LoginOrRegisterPage> createState() => _LoginOrRegisterPageState();
@@ -24,9 +25,7 @@ class _LoginOrRegisterPageState extends State<LoginOrRegisterPage> {
   @override
   Widget build(BuildContext context) {
     if (showLoginPage) {
-      return LoginPage(
-        onTap: togglePages,
-      );
+      return LoginPage(onTap: togglePages, token: widget.token);
     } else {
       return SignupPage(
         onTap: togglePages,
