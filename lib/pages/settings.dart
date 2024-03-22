@@ -82,7 +82,11 @@ class _SettingsPageState extends State<SettingsPage> {
               // Change Account Information
               ListTile(
                 leading: Icon(Icons.person),
-                title: Text('Change Account Information'),
+                title: Text(
+                  'Change Account Information',
+                  style:
+                      TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+                ),
                 onTap: () {
                   // TODO: Implement change account information functionality
                   signUserOut();
@@ -91,7 +95,11 @@ class _SettingsPageState extends State<SettingsPage> {
               // Connect a New Device
               ListTile(
                 leading: Icon(Icons.devices),
-                title: Text('Connect a New Device'),
+                title: Text(
+                  'Connect a New Device',
+                  style:
+                      TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+                ),
                 onTap: () {
                   // TODO: Implement connect new device functionality
                   Navigator.push(context,
@@ -101,7 +109,11 @@ class _SettingsPageState extends State<SettingsPage> {
               // Check for Connectivity
               ListTile(
                 leading: Icon(Icons.wifi),
-                title: Text('Check for Connectivity'),
+                title: Text(
+                  'Check for Connectivity',
+                  style:
+                      TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+                ),
                 onTap: () {
                   // TODO: Implement connectivity check functionality
                 },
@@ -109,7 +121,11 @@ class _SettingsPageState extends State<SettingsPage> {
               // Set Water Levels
               ListTile(
                 leading: Icon(Icons.opacity),
-                title: Text('Set Water Levels'),
+                title: Text(
+                  'Set Water Levels',
+                  style:
+                      TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+                ),
                 onTap: () {
                   // TODO: Implement set water levels functionality
                 },
@@ -117,7 +133,11 @@ class _SettingsPageState extends State<SettingsPage> {
               // Change Language
               ListTile(
                 leading: Icon(Icons.language),
-                title: Text('Change Language'),
+                title: Text(
+                  'Change Language',
+                  style:
+                      TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+                ),
                 onTap: () {
                   // TODO: Implement change language functionality
                 },

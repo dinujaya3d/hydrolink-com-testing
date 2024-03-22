@@ -5,7 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class WaterflowIndicator extends StatefulWidget {
-  const WaterflowIndicator({Key? key}) : super(key: key);
+  final bool value;
+  final bool cutOff;
+  WaterflowIndicator({
+    Key? key,
+    required this.value,
+    required this.cutOff,
+  }) : super(key: key);
 
   @override
   _WaterflowIndicatorState createState() => _WaterflowIndicatorState();
@@ -20,7 +26,7 @@ class _WaterflowIndicatorState extends State<WaterflowIndicator> {
       radius: MediaQuery.of(context).size.width * 0.15,
       lineWidth: 0.022 * MediaQuery.of(context).size.width,
       percent: 0.9999999999,
-      progressColor: Colors.red,
+      progressColor: widget.value ? Colors.red : Colors.green,
       backgroundColor: Color(0xFF203248),
       circularStrokeCap: CircularStrokeCap.round,
       center: Row(
@@ -30,7 +36,11 @@ class _WaterflowIndicatorState extends State<WaterflowIndicator> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "Air Flow",
+                widget.value
+                    ? "Air Flow"
+                    : widget.cutOff
+                        ? "Cut-Off"
+                        : "Normal",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,

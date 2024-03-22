@@ -24,6 +24,8 @@ class _NewDevicePageState extends State<NewDevicePage> {
   List _tankParametersValues = [];
   int _height = 0;
   String _errorText = '';
+  int _upperValue = 0;
+  int _lowerValue = 1;
 
   Query dbRef2 = FirebaseDatabase.instance.ref();
   DatabaseReference barcodeReference =
@@ -95,8 +97,8 @@ class _NewDevicePageState extends State<NewDevicePage> {
           selectedTankType = database['Tanks'][_userTank]['MeasurementType'];
           _selectedCapacity = database['Tanks'][_userTank]['Capacity'];
           _height = database['Tanks'][_userTank]['Height'];
-          _startValue = database['Tanks'][_userTank]['LowerValue'].toDouble();
-          _endValue = database['Tanks'][_userTank]['UpperValue'].toDouble();
+          _startValue = database['Tanks'][_userTank]['LowerSlider'].toDouble();
+          _endValue = database['Tanks'][_userTank]['UpperSlider'].toDouble();
           _nickNameController.text = database['Tanks'][_userTank]['NickName'];
         }
         //selectedType = database['Tanks'][_userTank][result];
@@ -569,9 +571,12 @@ class _NewDevicePageState extends State<NewDevicePage> {
                       'MeasurementType': selectedTankType,
                       'Capacity': _selectedCapacity,
                       'Height': _height,
-                      'LowerValue': _startValue.toInt(),
-                      'UpperValue': _endValue.toInt(),
+                      'LowerSlider': _startValue.toInt(),
+                      'UpperSlider': _endValue.toInt(),
                       'NickName': _nickNameController.text,
+                      'UpperValue': _height * ((100 - _endValue) / 100).toInt(),
+                      'LowerValue':
+                          _height * ((100 - _startValue) / 100).toInt(),
                     };
                     tanksReference.child(_userTank).update(updater);
 

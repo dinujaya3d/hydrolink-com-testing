@@ -184,11 +184,15 @@ class _DashboardState extends State<Dashboard> {
                     top: MediaQuery.of(context).size.height * 0.04,
                     bottom: MediaQuery.of(context).size.height * 0.04),
                 child: Text(
-                  'Hydro Level',
+                  tank['Tanks'][user]['Cutoff']
+                      ? 'Alert: Water Cut-off'
+                      : 'Hydro Level',
                   style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.onPrimary,
+                    color: tank['Tanks'][user]['Cutoff']
+                        ? Colors.red
+                        : Theme.of(context).colorScheme.onPrimary,
                   ),
                 ),
               ),
@@ -208,7 +212,9 @@ class _DashboardState extends State<Dashboard> {
                       SizedBox(
                         height: MediaQuery.of(context).size.width * 0.35 + 20,
                         width: MediaQuery.of(context).size.width * 0.5,
-                        child: WaterflowIndicator(),
+                        child: WaterflowIndicator(
+                            value: tank['Tanks'][user]['AirFlow'],
+                            cutOff: tank['Tanks'][user]['Cutoff']),
                       ),
                       Text(
                         "Water Flow",
@@ -225,7 +231,11 @@ class _DashboardState extends State<Dashboard> {
                       SizedBox(
                         height: MediaQuery.of(context).size.width * 0.35 + 20,
                         width: MediaQuery.of(context).size.width * 0.5,
-                        child: PercentageSmall(),
+                        child: PercentageSmall(
+                          value: tank['Tanks'][user]['Battery'].toDouble() > 0
+                              ? tank['Tanks'][user]['Battery'].toDouble()
+                              : 0.01,
+                        ),
                       ),
                       Text(
                         "Battery",
@@ -388,28 +398,32 @@ class _DashboardState extends State<Dashboard> {
             end: Alignment.bottomCenter,
           ),
         ),
-        child: Column(
-          children: [
-            //Text("Logged In: " + userFire.uid!),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              //Text("Logged In: " + userFire.uid!),
 
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.8795,
-              child: FirebaseAnimatedList(
-                physics: const NeverScrollableScrollPhysics(),
-                query: dbRef2,
-                itemBuilder: (BuildContext context, DataSnapshot snapshot,
-                    Animation<double> animation, int index) {
-                  Map tank = snapshot.value as Map;
-                  //mySmartDevices[index][2] =
-                  //    student[user][switchParams[index]];
-                  tank['key'] = snapshot.key;
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 1.1,
+                child: FirebaseAnimatedList(
+                  physics: const NeverScrollableScrollPhysics(),
+                  query: dbRef2,
+                  itemBuilder: (BuildContext context, DataSnapshot snapshot,
+                      Animation<double> animation, int index) {
+                    Map tank = snapshot.value as Map;
+                    //mySmartDevices[index][2] =
+                    //    student[user][switchParams[index]];
+                    tank['key'] = snapshot.key;
 
-                  return Dash(
-                      tank: tank, userUID: widget.userUid, token: widget.token);
-                },
+                    return Dash(
+                        tank: tank,
+                        userUID: widget.userUid,
+                        token: widget.token);
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
